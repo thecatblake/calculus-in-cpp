@@ -10,7 +10,7 @@
 
 class World2D {
 public:
-    std::vector<Object2D*> objects;
+    std::vector<std::unique_ptr<Object2D>> objects;
 
     std::vector<Hit> hit(const Eigen::Vector2d& point);
     Eigen::Vector3d color_at(const Eigen::Vector2d& point);

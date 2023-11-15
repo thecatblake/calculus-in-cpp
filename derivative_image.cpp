@@ -15,20 +15,21 @@ int main() {
     int height = 800;
 
     auto f = [](double x, double y) { return x*x - y; };
-    double x1 = 0.5;
-    double y1 = f(x1,0);
-    auto f_d = [f, x1, y1](double x, double y) { return differentiate(std::bind(f, _1, y1), x1) * (x - x1) + y1 - y;};
 
     Canvas2D canvas(width, height);
     Camera camera(width, height, M_PI/2);
     camera.transform = view_transform({0, 1, -1}, {0, 0, 0}, {0, 1, 0});
 
     World2D world;
-    Curve2D c(f);
-    Curve2D d(f_d);
+    auto c = std::make_unique<Curve2D>(f);
 
-    world.objects.push_back(&c);
-    world.objects.push_back(&d);
+    double x1 = 0.3;
+    double y1 = f(x1,0);
+    auto f_d = [f, x1, y1](double x, double y) { return differentiate(std::bind(f, _1, y1), x1) * (x - x1) + y1 - y;};
+    auto c_d = std::make_unique<Curve2D>(f_d);
+    world.objects.push_back(std::move(c_d));
+
+    world.objects.push_back(std::move(c));
 
     camera.render(canvas, world);
 
