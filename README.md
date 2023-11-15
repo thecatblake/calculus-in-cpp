@@ -1,1 +1,1 @@
-# deeplearning-in-cpp
+# calculus-in-cpp
